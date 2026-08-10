@@ -3,6 +3,7 @@ import uvicorn
 from pypdf import PdfReader
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from convert_to_json import convert_resume_to_json
 
 app = FastAPI()
 
@@ -15,7 +16,8 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-@app.post("/resume/pdf-reader")
+@app.post("/resume/pdf-scan" \
+"")
 async def parse_resume(file: UploadFile = File(...)):
     # Read the uploaded file contents into bytes
     pdf_bytes = await file.read()
@@ -31,6 +33,10 @@ async def parse_resume(file: UploadFile = File(...)):
     # Get the first page (index 0)
     page = reader.pages[0]
     text = page.extract_text() or ""
+    json_format = convert_resume_to_json(text)
+    with open("resume.josn", "w", encoding="utf-8") as output_file:
+        output_file.write(json_format)
+
     
     return {
         "filename": file.filename,

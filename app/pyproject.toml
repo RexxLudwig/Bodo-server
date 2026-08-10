@@ -14,10 +14,11 @@ dependencies = [
     "pymupdf",
     "python-docx",
     "requests",
-    "openai",
     "pydantic",
     "tiktoken",
     "rich",
+    "langchain-google-genai>=4.3.2",
+    "langchain-ollama>=1.1.0",
 ]
 
 
