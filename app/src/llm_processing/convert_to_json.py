@@ -3,7 +3,7 @@ import os
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from dotenv import load_dotenv
-from config.config import get_llm
+from src.config.config import get_llm
 
 load_dotenv()
 

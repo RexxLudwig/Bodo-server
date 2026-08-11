@@ -29,8 +29,8 @@ class Extractor:
             page_text = self.extract_all_text(page)
             page_urls.update(self.extract_hyperlinks(page_text))
                 
-            # 3. OCR fallback if necessary
-            if not page_urls and self.use_ocr_fallback:
+            # 3. OCR fallback if necessary (if very little text was extracted, it's likely an image/scan)
+            if len(page_text.strip()) < 50 and self.use_ocr_fallback:
                 page_urls.update(self._extract_via_ocr(pdf_path, page_num))
             
             all_urls.update(page_urls)
@@ -65,13 +65,10 @@ class Extractor:
 
     def extract_hyperlinks(self, text: str) -> List[str]:
         """Extract URLs typed as plain text using regex."""
+        # A more robust regex that catches URLs with or without http://, including paths
         url_pattern = re.compile(
-            r'(?:https?://)?'
-            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
-            r'localhost|'
-            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
-            r'(?::\d+)?'
-            r'(?:/?|[/?]\S+)', re.IGNORECASE)
+            r'(?:https?://)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)', 
+            re.IGNORECASE)
         return url_pattern.findall(text)
 
     def extract_all_text(self, page: fitz.Page) -> str:
@@ -105,14 +102,20 @@ class Extractor:
     def _classify_urls(self, urls: List[str]) -> Dict[str, List[str]]:
         """Classify URLs into basic categories."""
         classified = {
+            'github': [],
+            'portfolio': [],
             'social_media': [],
             'documents': [],
             'general': []
         }
         for url in urls:
             lower_url = url.lower()
-            if any(domain in lower_url for domain in ['twitter.com', 'linkedin.com', 'facebook.com', 'github.com']):
+            if 'github.com' in lower_url:
+                classified['github'].append(url)
+            elif any(domain in lower_url for domain in ['quora.com', 'linkedin.com', 'leetcode.com', 'twitter.com']):
                 classified['social_media'].append(url)
+            elif 'portfolio' in lower_url:
+                classified['portfolio'].append(url)
             elif any(ext in lower_url for ext in ['.pdf', '.doc', '.docx']):
                 classified['documents'].append(url)
             else:
