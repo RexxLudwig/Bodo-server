@@ -3,7 +3,7 @@ import uvicorn
 from pypdf import PdfReader
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from convert_to_json import convert_resume_to_json
+from llm_processing.convert_to_json import convert_resume_to_json
 
 app = FastAPI()
 
