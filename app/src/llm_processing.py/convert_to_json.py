@@ -3,7 +3,7 @@ import os
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from dotenv import load_dotenv
-from config import get_llm
+from config.config import get_llm
 
 load_dotenv()
 
@@ -65,7 +65,11 @@ def convert_resume_to_json(text: str) -> str:
     )
     
     parsed_resume = structured_llm.invoke(prompt)
-    return parsed_resume.model_dump_json(indent=2)
+    if isinstance(parsed_resume, BaseModel):
+        return parsed_resume.model_dump_json(indent=2)
+    elif isinstance(parsed_resume, dict):
+        return json.dumps(parsed_resume, indent=2)
+    return json.dumps(parsed_resume, indent=2)
 
 if __name__ == "__main__":
     import argparse
@@ -89,3 +93,4 @@ if __name__ == "__main__":
         f.write(json_output)
         
     print(f"Successfully wrote structured JSON to {args.output}")
+    

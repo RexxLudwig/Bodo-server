@@ -19,6 +19,8 @@ dependencies = [
     "rich",
     "langchain-google-genai>=4.3.2",
     "langchain-ollama>=1.1.0",
+    "pdf2image",
+    "pytesseract",
 ]
 
 
@@ -38,6 +40,11 @@ packages = ["langgraph.templates.agent", "agent"]
 
 [tool.setuptools.package-data]
 "*" = ["py.typed"]
+
+[tool.pyright]
+extraPaths = [".", "src"]
+
+
 
 [tool.ruff]
 lint.select = [

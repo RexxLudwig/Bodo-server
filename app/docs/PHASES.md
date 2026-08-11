@@ -10,21 +10,24 @@ Build a production-grade AI-powered ATS scoring platform using **Graph Engineeri
 
 # Phase 1 — Resume Parsing & Data Extraction
 
-## Objective
+### Status
+- **Completed** (Refactored with LLM configuration and JSON conversion)
+
+### Objective
 
 Convert resumes into structured data for downstream analysis.
 
 ### Deliverables
 
-* PDF/DOCX parsing
-* Section detection
-* Contact information extraction
-* Experience extraction
-* Project extraction
-* Skills extraction
-* Education extraction
-* Certification extraction
-* Link extraction (GitHub, LinkedIn, Portfolio)
+- [x] PDF/DOCX parsing
+- [x] Section detection
+- [x] Contact information extraction
+- [x] Experience extraction
+- [x] Project extraction
+- [x] Skills extraction
+- [x] Education extraction
+- [x] Certification extraction
+- [x] Link extraction (GitHub, LinkedIn, Portfolio)
 
 ### Output
 
@@ -42,7 +45,7 @@ Convert resumes into structured data for downstream analysis.
 
 ### AI Usage
 
-None.
+LLM is now used for structured extraction, parsing, and JSON conversion.
 
 ---
 
