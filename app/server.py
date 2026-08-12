@@ -44,20 +44,28 @@ async def parse_resume(file: UploadFile = File(...)):
         # Extract URLs using the extractor
         embedded_urls = extractor.extract_urls(temp_pdf_path)
         
-        # Extract text from the first page using pypdf reader
+        # Extract text from the first page for the response
         page = reader.pages[0]
-        text = page.extract_text() or ""
+        first_page_text = page.extract_text() or ""
         
-        # Convert URLs to JSON (fixed the syntax error here)
-        json_format = convert_resume_to_json("\n".join(embedded_urls['urls_list']))
+        # Extract text from ALL pages for the JSON converter
+        full_text = ""
+        for p in reader.pages:
+            full_text += (p.extract_text() or "") + "\n"
+        
+        # Convert URLs to JSON
+        url_strings = [f"{item['text']}: {item['url']}" if item['text'] != item['url'] else item['url'] for item in embedded_urls['urls_list']]
+        combined_text = full_text + "\n\nExtracted Links:\n" + "\n".join(url_strings)
+        
+        json_format = convert_resume_to_json(combined_text)
         with open("resume.json", "w", encoding="utf-8") as output_file:
             output_file.write(json_format)
 
         return {
             "filename": file.filename,
             "size_bytes": len(pdf_bytes),
-            "number_of_words_in_page": len(text.split()),
-            "text_of_page": text,
+            "number_of_words_in_page": len(first_page_text.split()),
+            "text_of_page": first_page_text,
             "embedded_urls": embedded_urls
         }
     finally:

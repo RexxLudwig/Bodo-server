@@ -11,37 +11,47 @@ class Extractor:
         self.use_ocr_fallback = use_ocr_fallback
 
     def extract_urls(self, pdf_path: str) -> Dict[str, Any]:
-        """Main pipeline to extract structured URLs from a PDF."""
+        """Main pipeline to extract structured URLs and their text from a PDF."""
         if not os.path.exists(pdf_path):
             raise FileNotFoundError(f"PDF file not found: {pdf_path}")
             
         doc = fitz.open(pdf_path)
-        all_urls = set()
+        all_urls_map = {}
         
         for page_num in range(len(doc)):
             page = doc[page_num]
-            page_urls = set()
+            page_items = []
             
             # 1. Embedded hyperlink extraction
-            page_urls.update(self._extract_embedded_links(page))
+            page_items.extend(self._extract_embedded_links(page))
             
             # 2. Text URL extraction
             page_text = self.extract_all_text(page)
-            page_urls.update(self.extract_hyperlinks(page_text))
+            page_items.extend(self.extract_hyperlinks(page_text))
                 
             # 3. OCR fallback if necessary (if very little text was extracted, it's likely an image/scan)
             if len(page_text.strip()) < 50 and self.use_ocr_fallback:
-                page_urls.update(self._extract_via_ocr(pdf_path, page_num))
+                page_items.extend(self._extract_via_ocr(pdf_path, page_num))
             
-            all_urls.update(page_urls)
+            for item in page_items:
+                url = item['url']
+                text = item['text']
+                # Keep the longest extracted text for a given URL
+                if url not in all_urls_map or len(text) > len(all_urls_map.get(url, "")):
+                    all_urls_map[url] = text
             
         doc.close()
         
         # 4. Normalize
-        normalized_urls = {self._normalize_url(url) for url in all_urls if url}
+        normalized_urls = {}
+        for url, text in all_urls_map.items():
+            if not url: continue
+            norm = self._normalize_url(url)
+            if norm not in normalized_urls or len(text) > len(normalized_urls.get(norm, "")):
+                normalized_urls[norm] = text
         
-        # 5. Deduplicate (Already handled by set, but we format it as a list)
-        unique_urls = list(normalized_urls)
+        # 5. Format as list of dictionaries
+        unique_urls = [{'url': k, 'text': v} for k, v in normalized_urls.items()]
         
         # 6. Classify
         classified = self._classify_urls(unique_urls)
@@ -53,29 +63,33 @@ class Extractor:
             'urls_list': unique_urls
         }
 
-    def _extract_embedded_links(self, page: fitz.Page) -> List[str]:
-        """Extract embedded hyperlinks from a PDF page."""
+    def _extract_embedded_links(self, page: fitz.Page) -> List[Dict[str, str]]:
+        """Extract embedded hyperlinks and their text from a PDF page."""
         links = []
         for link in page.get_links():
             if link.get('kind') == fitz.LINK_URI:
                 uri = link.get('uri')
                 if uri:
-                    links.append(uri)
+                    rect = link.get('from')
+                    link_text = page.get_textbox(rect).replace('\n', ' ').strip() if rect else uri
+                    if not link_text:
+                        link_text = uri
+                    links.append({"url": uri, "text": link_text})
         return links
 
-    def extract_hyperlinks(self, text: str) -> List[str]:
+    def extract_hyperlinks(self, text: str) -> List[Dict[str, str]]:
         """Extract URLs typed as plain text using regex."""
         # A more robust regex that catches URLs with or without http://, including paths
         url_pattern = re.compile(
             r'(?:https?://)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)', 
             re.IGNORECASE)
-        return url_pattern.findall(text)
+        return [{"url": match, "text": match} for match in url_pattern.findall(text)]
 
     def extract_all_text(self, page: fitz.Page) -> str:
         """Extract all raw text from a PDF page."""
         return page.get_text()
 
-    def _extract_via_ocr(self, pdf_path: str, page_num: int) -> List[str]:
+    def _extract_via_ocr(self, pdf_path: str, page_num: int) -> List[Dict[str, str]]:
         """Convert a page to image and run OCR to extract URLs."""
         urls = []
         try:
@@ -99,7 +113,7 @@ class Extractor:
         except Exception:
             return url
 
-    def _classify_urls(self, urls: List[str]) -> Dict[str, List[str]]:
+    def _classify_urls(self, urls: List[Dict[str, str]]) -> Dict[str, List[Dict[str, str]]]:
         """Classify URLs into basic categories."""
         classified = {
             'github': [],
@@ -108,16 +122,16 @@ class Extractor:
             'documents': [],
             'general': []
         }
-        for url in urls:
-            lower_url = url.lower()
+        for item in urls:
+            lower_url = item['url'].lower()
             if 'github.com' in lower_url:
-                classified['github'].append(url)
+                classified['github'].append(item)
             elif any(domain in lower_url for domain in ['quora.com', 'linkedin.com', 'leetcode.com', 'twitter.com']):
-                classified['social_media'].append(url)
+                classified['social_media'].append(item)
             elif 'portfolio' in lower_url:
-                classified['portfolio'].append(url)
+                classified['portfolio'].append(item)
             elif any(ext in lower_url for ext in ['.pdf', '.doc', '.docx']):
-                classified['documents'].append(url)
+                classified['documents'].append(item)
             else:
-                classified['general'].append(url)
+                classified['general'].append(item)
         return classified
