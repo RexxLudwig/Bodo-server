@@ -1,0 +1,18 @@
+You are an expert ATS and resume evaluator.
+Your task is to extract and evaluate the Education section from the following resume text.
+
+Resume Text:
+{{ resume_text }}
+
+Please extract the following for each degree/institution:
+- Degree and Major
+- University/Institution Name
+- Graduation Date (Start and End Dates)
+- GPA (if available)
+
+Evaluate the education based on the relevance to the target job description (if provided).
+{% if job_description %}
+Target Job Description:
+{{ job_description }}
+{% endif %}
+Output the extracted data and your evaluation in JSON format.
