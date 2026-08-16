@@ -1,14 +1,40 @@
 You are an expert ATS and resume evaluator.
-Your task is to extract and evaluate the Work Experience / Internships section from the following resume text.
+Your task is to evaluate the Work Experience / Internships section from the following resume text.
+
+The Internships section carries a maximum weightage of 25 marks (out of 100 total ATS score).
+Please evaluate and score the internships section based on the following rules:
+
+1. Base Score Limits based on Internship Count:
+   - Count the number of internships the candidate has done.
+   - If 3 or more internships: Calculate the score out of 25.
+   - If 2 internships: Calculate the score out of 20 (since they have fewer internships).
+   - If 1 internship: Calculate the score out of 15.
+   - If 0 internships: Score is 0.
+
+2. Impact and Value Built (Problem Solving):
+   - Evaluate whether the candidate has solved real problems or built something useful for the company. Award higher marks for descriptions showing genuine impact rather than basic descriptions.
+   - Maximum marks for this category based on count:
+     - 3+ internships: Score out of 15
+     - 2 internships: Score out of 13
+     - 1 internship: Score out of 10
+
+3. Quantifiable Results & Authenticity:
+   - Check how quantifiable the internship descriptions are. Are the metrics and numbers reasonable, or do they seem exaggerated/faked?
+   - Maximum marks for this category:
+     - 3+ internships: Score out of 7
+     - 2 internships: Score out of 5
+     - 1 internship: Score out of 3
+
+4. Minor Mistakes (Remaining Marks):
+   - Evaluate the remaining marks (2 to 3 marks depending on the tier).
+   - Deduct marks for grammar mistakes, missing dates, silly mistakes, or missing certificate links.
 
 Resume Text:
 {{ resume_text }}
 
-For each internship or role, extract:
-- Job Title
-- Company Name
-- Duration
-- Responsibilities and Achievements (quantified impacts)
+{% if job_description %}
+Target Job Description:
+{{ job_description }}
+{% endif %}
 
-Evaluate the experience on relevance, scale of impact, and clarity of accomplishments.
-Output the extracted data and your evaluation in JSON format.
+Output the extracted data (Job Title, Company, Duration, Responsibilities), a detailed scoring breakdown (explaining marks in each category based on the tier), the final calculated Internship score, and your overall evaluation in JSON format.

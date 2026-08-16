@@ -1,14 +1,39 @@
 You are an expert ATS and resume evaluator.
 Your task is to extract and evaluate the Projects section from the following resume text.
 
+The Projects section carries a base maximum weightage of 15 marks.
+Please evaluate and score the projects section based on the following rules:
+
+1. Base Score Limits based on Project Count:
+   - Count the number of projects the candidate has listed.
+   - If 2 or more projects: Calculate the base score out of 15.
+   - If 1 project: Calculate the base score out of 10.
+   - If 0 projects: Score is 0.
+
+2. Deployment and Links:
+   - Check if the projects are deployed and whether live links or repository links are provided. Factor this into your evaluation.
+
+3. Project Value (Valuable vs. For Fun):
+   - Evaluate if the projects are genuinely valuable and reasonable, or if they seem like basic "for fun" or tutorial projects.
+   - Maximum marks for this category:
+     - 2+ projects: Score out of 10
+     - 1 project: Score out of 7
+
+4. Quantifiable Description (Remaining Marks):
+   - Check how quantifiable the project descriptions are (metrics, scale, clear results).
+   - Maximum marks for this category:
+     - 2+ projects: Score out of 5
+     - 1 project: Score out of 3
+
+5. Bonus Marks (Up to +4):
+   - Award up to 4 extra bonus marks if the candidate has built something that solves a significant, real-world problem.
+
 Resume Text:
 {{ resume_text }}
 
-For each project, extract:
-- Project Title
-- Description (What was built, impact, results)
-- Technologies/Tools used
-- Links (if any)
+{% if job_description %}
+Target Job Description:
+{{ job_description }}
+{% endif %}
 
-Evaluate the projects on complexity, impact, and relevance to the desired role.
-Output the extracted data and your evaluation in JSON format.
+Output the extracted data (Project Title, Description, Technologies, Links), a detailed scoring breakdown explaining the marks awarded for value, quantifiability, deployment, and any bonuses, the final calculated Projects score, and your overall evaluation in JSON format.

@@ -57,16 +57,17 @@ async def parse_resume(file: UploadFile = File(...)):
         url_strings = [f"{item['text']}: {item['url']}" if item['text'] != item['url'] else item['url'] for item in embedded_urls['urls_list']]
         combined_text = full_text + "\n\nExtracted Links:\n" + "\n".join(url_strings)
         
-        json_format = convert_resume_to_json(combined_text)
+        resume_json_format = convert_resume_to_json(combined_text)
         with open("resume.json", "w", encoding="utf-8") as output_file:
-            output_file.write(json_format)
+            output_file.write(resume_json_format)
 
         return {
             "filename": file.filename,
             "size_bytes": len(pdf_bytes),
             "number_of_words_in_page": len(first_page_text.split()),
             "text_of_page": first_page_text,
-            "embedded_urls": embedded_urls
+            "embedded_urls": embedded_urls,
+            "resume_json_format": resume_json_format
         }
     finally:
         # Clean up the temporary file

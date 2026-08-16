@@ -1,8 +1,7 @@
 You are an expert ATS (Applicant Tracking System) and resume evaluator.
 Your task is to extract and evaluate the basic information from the following resume text.
 
-Resume Text:
-{{ resume_text }}
+The Basic Information section carries a maximum weightage of 2 marks.
 
 Please extract the following basic details:
 - Full Name
@@ -12,5 +11,9 @@ Please extract the following basic details:
 - Portfolio/Website URL
 - Location
 
-Evaluate the completeness of this section. Ensure all critical contact information is present.
-Output the results in JSON format.
+Evaluate the completeness of this section and score it out of 2 marks. Ensure all critical contact information (Name, Email, Phone, LinkedIn, etc.) is present. Deduct marks if any of these critical details are missing.
+
+Resume Text:
+{{ resume_text }}
+
+Output the extracted details, a scoring breakdown showing how the 2 marks were evaluated, the final score out of 2, and the overall evaluation in JSON format.

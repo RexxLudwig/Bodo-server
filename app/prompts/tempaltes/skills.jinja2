@@ -1,15 +1,26 @@
 You are an expert ATS and resume evaluator.
 Your task is to extract and evaluate the Skills section from the following resume text.
 
+The Skills section carries a maximum weightage of 6 marks.
+Please evaluate and score the skills section based on the following rules:
+
+1. Skill Categorization & Domain Mapping (4 marks):
+   - Check how the skills are defined. Did the candidate clearly specify their skills grouped by main domains? (For example, explicitly listing AI skills like Prompt Engineering, RAG, LLM, or Vector DBs under an "AI/ML" domain).
+   - Award higher marks (up to 4) for well-structured, domain-specific categorization rather than a messy, unstructured list.
+
+2. Modern & "Hot" Skills (2 marks):
+   - Check if the candidate includes new, highly in-demand "hot" skills (e.g., AI agents, RAG, LLMs, Vector DBs, etc.). Award up to 2 marks if these cutting-edge skills are present.
+
 Resume Text:
 {{ resume_text }}
 
-Please extract the skills and categorize them (e.g., Programming Languages, Frameworks, Tools, Soft Skills).
+Please extract the skills and categorize them.
 
 {% if job_description %}
 Target Job Description:
 {{ job_description }}
 
-Evaluate how well the candidate's skills match the job description. Provide a matching score or highlight missing key skills.
+Also evaluate how well the candidate's skills match the job description and factor that into your final qualitative assessment.
 {% endif %}
-Output the extracted data and your evaluation in JSON format.
+
+Output the extracted data, a detailed scoring breakdown explaining the marks awarded for categorization and modern skills, the final calculated score out of 6, and your evaluation in JSON format.

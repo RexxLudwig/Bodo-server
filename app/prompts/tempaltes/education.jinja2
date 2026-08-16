@@ -1,18 +1,32 @@
 You are an expert ATS and resume evaluator.
-Your task is to extract and evaluate the Education section from the following resume text.
+Your task is to evaluate the Education section from the following Structured Resume JSON.
 
-Resume Text:
-{{ resume_text }}
+The Education section carries a maximum weightage of 15 marks (out of 100 total ATS score). 
+Please evaluate and score the education section based on the following criteria:
 
-Please extract the following for each degree/institution:
-- Degree and Major
-- University/Institution Name
-- Graduation Date (Start and End Dates)
-- GPA (if available)
+1. Base Information & Minor Mistakes:
+   - Check for Degree, Major, and University/Institution Name.
+   - Check for Graduation Dates (Start and End Years). If the year/dates are not mentioned, deduct small marks (e.g., cut 2 marks).
+   
+2. GPA (Out of 5 marks):
+   - If GPA is provided: Calculate the score out of 5 proportionally based on the scale (e.g., convert from a 4.0 or 10.0 GPA scale to a 5-point scale).
+   - If GPA is NOT provided: Deduct 5 marks from the overall score, and explicitly state "GPA not mentioned".
 
-Evaluate the education based on the relevance to the target job description (if provided).
+3. Relevant Courses (5 marks):
+   - Check if relevant courses are mentioned and if they are relevant to the job. If courses are not mentioned, cut 5 marks.
+
+4. Minor Degree / Specialization (Bonus):
+   - If a minor degree or specialization is mentioned, give some extra marks for it (like 5 points).
+
+Overall Education Evaluation:
+Calculate the final Education Score (out of 15) using the deductions and calculations above. Also assess job compatibility based on the target job description (if provided).
+
+Resume JSON:
+{{ resume_json_format }}
+
 {% if job_description %}
 Target Job Description:
 {{ job_description }}
 {% endif %}
-Output the extracted data and your evaluation in JSON format.
+
+Output the extracted data, a detailed scoring breakdown (explaining all deductions, calculations, and bonuses), the final calculated Education score out of 15, and your overall evaluation in JSON format.

@@ -1,9 +1,21 @@
 You are an expert ATS and resume evaluator.
 Your task is to extract and evaluate the Awards and Achievements section from the following resume text.
 
+The Awards and Achievements section carries a maximum weightage of 10 marks.
+Please evaluate and score the section based on the following rules:
+
+1. Large-Scale Events & Competitions (5 marks):
+   - Award up to 5 marks for achievements in large-scale events, such as hackathons, major coding competitions, or specific notable examinations. Higher marks should be awarded if the scale of the event is large (e.g., 1000+ participants).
+
+2. Platform Ratings (3 marks):
+   - Award up to 3 marks if the candidate mentions competitive programming or technical platform ratings/ranks (e.g., LeetCode, Codeforces, HackerRank, etc.).
+
+3. Versatility / Outside Specialty (2 marks):
+   - Award up to 2 marks if the candidate has achieved something notable outside of their primary specialty (showing well-roundedness or diverse interests).
+
 Resume Text:
 {{ resume_text }}
 
 Extract all listed awards, honors, scholarships, or notable achievements.
 Evaluate the competitiveness and relevance of these achievements.
-Output the extracted data and your evaluation in JSON format.
+Output the extracted data, a detailed scoring breakdown based on the rules above, the final calculated score out of 10, and your evaluation in JSON format.
