@@ -3,13 +3,8 @@ import fitz
 import re
 from urllib.parse import urlparse, urlunparse
 import os
-from pdf2image import convert_from_path
-import pytesseract
 
 class Extractor:
-    def __init__(self, use_ocr_fallback: bool = True):
-        self.use_ocr_fallback = use_ocr_fallback
-
     def extract_urls(self, pdf_path: str) -> Dict[str, Any]:
         """Main pipeline to extract structured URLs and their text from a PDF."""
         if not os.path.exists(pdf_path):
@@ -28,10 +23,6 @@ class Extractor:
             # 2. Text URL extraction
             page_text = self.extract_all_text(page)
             page_items.extend(self.extract_hyperlinks(page_text))
-                
-            # 3. OCR fallback if necessary (if very little text was extracted, it's likely an image/scan)
-            if len(page_text.strip()) < 50 and self.use_ocr_fallback:
-                page_items.extend(self._extract_via_ocr(pdf_path, page_num))
             
             for item in page_items:
                 url = item['url']
@@ -42,7 +33,7 @@ class Extractor:
             
         doc.close()
         
-        # 4. Normalize
+        # 3. Normalize
         normalized_urls = {}
         for url, text in all_urls_map.items():
             if not url: continue
@@ -50,13 +41,13 @@ class Extractor:
             if norm not in normalized_urls or len(text) > len(normalized_urls.get(norm, "")):
                 normalized_urls[norm] = text
         
-        # 5. Format as list of dictionaries
+        # 4. Format as list of dictionaries
         unique_urls = [{'url': k, 'text': v} for k, v in normalized_urls.items()]
         
-        # 6. Classify
+        # 5. Classify
         classified = self._classify_urls(unique_urls)
         
-        # 7. Return structured URLs
+        # 6. Return structured URLs
         return {
             'total_unique_urls': len(unique_urls),
             'classified_urls': classified,
@@ -88,18 +79,6 @@ class Extractor:
     def extract_all_text(self, page: fitz.Page) -> str:
         """Extract all raw text from a PDF page."""
         return page.get_text()
-
-    def _extract_via_ocr(self, pdf_path: str, page_num: int) -> List[Dict[str, str]]:
-        """Convert a page to image and run OCR to extract URLs."""
-        urls = []
-        try:
-            images = convert_from_path(pdf_path, first_page=page_num+1, last_page=page_num+1)
-            for img in images:
-                ocr_text = pytesseract.image_to_string(img)
-                urls.extend(self.extract_hyperlinks(ocr_text))
-        except Exception as e:
-            print(f"OCR failed on page {page_num}: {e}")
-        return urls
 
     def _normalize_url(self, url: str) -> str:
         """Normalize URL: add scheme, strip trailing slashes and fragments."""
@@ -135,3 +114,19 @@ class Extractor:
             else:
                 classified['general'].append(item)
         return classified
+
+def get_resume_text(pdf_path: str) -> str:
+    """Helper function to extract text and links into a combined resume format."""
+    extractor = Extractor()
+    embedded_urls = extractor.extract_urls(pdf_path)
+    
+    doc = fitz.open(pdf_path)
+    full_text = ""
+    for page in doc:
+        full_text += page.get_text() + "\n"
+    doc.close()
+    
+    url_strings = [f"{item['text']}: {item['url']}" if item['text'] != item['url'] else item['url'] for item in embedded_urls['urls_list']]
+    combined_text = full_text + "\n\nExtracted Links:\n" + "\n".join(url_strings)
+    
+    return combined_text
