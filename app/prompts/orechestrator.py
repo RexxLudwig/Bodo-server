@@ -61,5 +61,8 @@ class PromptOrchestrator:
     def render_evaluation_criteria(self, candidate_data: str, job_description: str = None) -> str:
         return self.render_template('resume_evaluation_criteria', candidate_data=candidate_data, job_description=job_description)
 
+    def render_job_compatibility(self, resume_json_format: str, job_description: str) -> str:
+        return self.render_template('job_compatibility', resume_json_format=resume_json_format, job_description=job_description)
+
 # Provide a default singleton instance for easy imports across the app
 orchestrator = PromptOrchestrator()

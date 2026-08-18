@@ -1,0 +1,42 @@
+About the job
+About Appier
+
+Appier (TSE: 4180) is an AI-native Agentic AI as a Service (AaaS) company that empowers businesses to create value through cutting-edge AdTech and MarTech solutions. Founded in 2012 with the vision of “Making AI Easy by Making Software Intelligent,” Appier helps businesses turn AI into ROI through its Ad Cloud, Personalization Cloud, and Data Cloud—each powered by Agentic AI that enables autonomous, adaptive, and real-time decision-making. Today, Appier operates 17 offices across APAC, the US, and EMEA, and is listed on the Tokyo Stock Exchange. Learn more at www.appier.com.
+
+About The Role
+
+AI is reshaping how brands connect with consumers — and at Appier, we’re at the forefront. Our Playable Ads team builds AI-powered ad experiences — from interactive playable formats to video ads — that drive higher engagement and conversion for apps and games worldwide. We’re looking for a Machine Learning Engineer to turn promising models and prototypes into reliable, scalable creative-generation systems used in real products.
+
+This role sits at the intersection of applied ML and software engineering. You’ll work with scientists, backend and frontend engineers, product managers, and designers to build pipelines that generate, evaluate, and continuously improve ad creatives—while meeting production standards for quality, latency, cost, observability, and reliability.
+
+What You’ll Work On
+
+Build and operate reliable, scalable ML and generative AI pipelines that power automated content creation, personalization, and optimization across a range of creative formats and products.
+Productionize research prototypes and models by designing service and API contracts, containerized workers, asynchronous orchestration, artifact storage, and clear ownership boundaries.
+Apply modern ML—including LLMs, VLMs, multimodal generation, and agentic tool use—to improve creative quality, automation, and personalization.
+Engineer reliable workflows with schema validation, idempotency, retries, failure recovery, security, versioning, and end-to-end tests across staging and production.
+Define and monitor quality, latency, failure-rate, and generation-cost metrics; use logs, traces, evaluations, and experiments to diagnose bottlenecks and improve outcomes.
+Collaborate with scientists, backend and frontend engineers, product, and design to translate business needs into maintainable ML systems, document handoffs, and ship iteratively.
+
+What We’re Looking For
+
+[Minimum qualifications]
+
+Bachelor’s or Master’s degree in Computer Science, Machine Learning, Electrical Engineering, or a related field—or equivalent practical experience.
+Three or more years of experience building production software or ML systems, with strong computer science fundamentals and a record of writing maintainable, tested code.
+Strong Python skills and hands-on experience with PyTorch, TensorFlow, or equivalent ML tooling.
+Practical experience taking models, prompts, or data workflows from prototype to production using APIs, containers, batch or stream processing, and cloud infrastructure.
+Experience with cloud and ML platform tooling such as Docker, Kubernetes, GCP, CI/CD, workflow orchestrators, message queues, Spark, or OpenTelemetry
+Understanding of production ML concerns including reproducibility, data and model versioning, evaluation, monitoring, failure handling, latency, and cost.
+Strong debugging and systems-thinking skills across distributed components such as queues, workers, storage, and external services.
+Clear communication and cross-functional collaboration skills; comfortable using AI-assisted development tools responsibly while validating their output.
+
+[Preferred qualifications]
+
+Experience with generative media, creative optimization, advertising or MarTech, recommendation, or content-generation products.
+Experience designing agent tools, feedHands-on experience with generative AI or multimodal systems, such as LLMs, VLMs, image or video generation, RAG, tool use, or agent frameworks.
+back-loop pipelines, rigorous evaluations, or online experiments—and translating research into measurable product impact.
+
+Open to overseas candidates/Visa Support
+
+This position is based in Tokyo, Japan. For international candidates, Appier's Japan office provides visa sponsorship to ensure a smooth transition to Japan.

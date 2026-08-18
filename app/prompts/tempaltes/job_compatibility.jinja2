@@ -1,0 +1,24 @@
+
+## ATS Compatibility & Overall Score
+**Total Score**: 142.0/100
+**Job Compatibility**: 85/100You are an expert ATS (Applicant Tracking System) and HR recruiter.
+Your task is to evaluate the candidate's compatibility with the specific Job Description.
+
+The Job Compatibility Score should be out of 100. This is separate from the ATS format score. It strictly measures how well the candidate's skills, projects, and experience match the job requirements.
+
+Please evaluate the compatibility based on the following:
+1. Core Skills Match: Check if the required skills in the JD are present in the candidate's profile.
+2. Experience Match: Does the candidate's experience and project scale align with the seniority and requirements of the role?
+3. Missing Skills: Identify critical skills required by the JD that the candidate lacks.
+
+Candidate Data (Structured JSON):
+{{ resume_json_format }}
+
+Job Description:
+{{ job_description }}
+
+Output your evaluation in JSON format with the following exact keys:
+- "matching_skills": list of strings
+- "missing_skills": list of strings
+- "job_compatibility_score": integer out of 100
+- "improvement_suggestions": a string containing actionable advice to improve the resume for this job
